@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorites</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Favorite Quotes</h1>
+  </header>
+  <main>
+    <div id="favorites-list"></div>
+    <a href="index.html" class="action-btn">Back to Home</a>
+  </main>
+  <footer>
+    <p>&copy; 2024 Daily Quote PWA</p>
+  </footer>
+  <script>
+    const favoritesList = document.getElementById("favorites-list");
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favorites.length === 0) {
+      favoritesList.innerHTML = "<p>No favorites added yet!</p>";
+    } else {
+      favorites.forEach((quote) => {
+        const p = document.createElement("p");
+        p.textContent = quote;
+        favoritesList.appendChild(p);
+      });
+    }
+  </script>
+</body>
+</html>

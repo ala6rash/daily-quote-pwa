@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Quote PWA</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <header>
+    <h1>Daily Quote</h1>
+  </header>
+  <main>
+    <div id="quote-box">
+      <p id="quote">"Click the button to load a new quote."</p>
+      <div class="button-group">
+        <button id="new-quote-btn" class="action-btn">Get New Quote</button>
+        <button id="add-favorite-btn" class="action-btn">Add to Favorites</button>
+      </div>
+      <div class="icon-buttons">
+        <button id="toggle-theme-btn" class="icon-btn">
+          <img src="https://cdn-icons-png.flaticon.com/128/8338/8338708.png" alt="Dark Mode">
+        </button>
+        <button id="share-btn" class="icon-btn">
+          <img src="https://cdn-icons-png.flaticon.com/128/786/786205.png" alt="Share">
+        </button>
+        <a href="favorites.html" class="icon-btn">
+          <img src="https://e7.pngegg.com/pngimages/515/917/png-clipart-share-icon-computer-icons-button-safari-web-browser-button-angle-rectangle-thumbnail.png" alt="Favorites">
+        </a>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2024 Daily Quote PWA</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
+
