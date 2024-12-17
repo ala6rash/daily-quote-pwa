@@ -18,18 +18,36 @@
     <p>&copy; 2024 Daily Quote PWA</p>
   </footer>
   <script>
+    // Fetch favorites from localStorage
     const favoritesList = document.getElementById("favorites-list");
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-    if (favorites.length === 0) {
-      favoritesList.innerHTML = "<p>No favorites added yet!</p>";
-    } else {
-      favorites.forEach((quote) => {
-        const p = document.createElement("p");
-        p.textContent = quote;
-        favoritesList.appendChild(p);
-      });
+    function displayFavorites() {
+      favoritesList.innerHTML = ""; // Clear previous list
+
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = "<p>No favorites added yet!</p>";
+      } else {
+        favorites.forEach((quote, index) => {
+          const quoteDiv = document.createElement("div");
+          quoteDiv.className = "quote-item";
+
+          quoteDiv.innerHTML = `
+            <p>${quote}</p>
+            <button class="delete-btn" onclick="deleteFavorite(${index})">Delete</button>
+          `;
+          favoritesList.appendChild(quoteDiv);
+        });
+      }
     }
+
+    function deleteFavorite(index) {
+      favorites.splice(index, 1); // Remove quote from array
+      localStorage.setItem("favorites", JSON.stringify(favorites)); // Update localStorage
+      displayFavorites(); // Refresh list
+    }
+
+    displayFavorites();
   </script>
 </body>
 </html>

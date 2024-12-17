@@ -1,49 +1,54 @@
-const CACHE_NAME = "daily-quote-cache-v3";
-const DYNAMIC_CACHE = "dynamic-cache";
-const urlsToCache = [
-  "/index.html",
-  "/styles.css",
-  "/script.js",
-  "/favorites.html",
-  "/android-chrome-192x192.png",
+const CACHE_NAME = "daily-quote-cache-v1";
+const STATIC_FILES = [
+  "/", 
+  "/index.html", 
+  "/favorites.html", 
+  "/styles.css", 
+  "/script.js", 
+  "/manifest.json",
+  "/android-chrome-192x192.png", 
   "/android-chrome-512x512.png"
 ];
 
-self.addEventListener("install", event => {
+// Install Service Worker
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(STATIC_FILES);
     })
   );
 });
 
-self.addEventListener("fetch", event => {
-  if (event.request.url.includes("type.fit")) {
-    event.respondWith(
-      caches.open(DYNAMIC_CACHE).then(cache => {
-        return fetch(event.request).then(response => {
-          if (!response || response.status !== 200 || response.type !== "basic") {
-            return response;
-          }
-          cache.put(event.request, response.clone());
-          return response;
-        }).catch(() => caches.match(event.request));
-      })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(response => response || fetch(event.request))
-    );
-  }
+// Activate Service Worker
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
+    )
+  );
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(name => name !== CACHE_NAME && name !== DYNAMIC_CACHE)
-          .map(name => caches.delete(name))
-      );
-    })
+// Fetch Event
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        // Cache successful responses
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => {
+        // Fallback to cached version or static content
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || new Response("Resource not found offline.", { status: 404 });
+        });
+      })
   );
 });
